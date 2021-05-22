@@ -18,6 +18,7 @@ class CandidateSet {
 
  private:
   std::vector<std::vector<Vertex>> cs_;
+  std::vector<std::vector<Vertex>> embs_;
 };
 
 /**

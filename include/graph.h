@@ -35,13 +35,19 @@ class Graph {
 
   inline bool IsNeighbor(Vertex u, Vertex v) const;
 
+  //추가
+  inline int** get_edges() const;
+  //추가 끝
+
  private:
   int32_t graph_id_;
 
   size_t num_vertices_;
   size_t num_edges_;
   size_t num_labels_;
-
+  //추가
+  int** edges;
+  //추가 끝
   std::vector<size_t> label_frequency_;
 
   std::vector<size_t> start_offset_;
@@ -77,6 +83,11 @@ inline size_t Graph::GetNumEdges() const { return num_edges_; }
  *
  * @return size_t
  */
+
+//추가
+inline int** Graph::get_edges() const { return edges; }
+//추가 끝
+
 inline size_t Graph::GetNumLabels() const { return num_labels_; }
 
 /**
@@ -176,6 +187,7 @@ inline Vertex Graph::GetNeighbor(size_t offset) const {
  * @param v vertex id.
  * @return bool
  */
+
 inline bool Graph::IsNeighbor(Vertex u, Vertex v) const {
   if (GetNeighborLabelFrequency(u, GetLabel(v)) >
       GetNeighborLabelFrequency(v, GetLabel(u)))

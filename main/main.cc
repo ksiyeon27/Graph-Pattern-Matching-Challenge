@@ -8,10 +8,8 @@
 #include "common.h"
 #include "graph.h"
 
-int main(int argc, char *argv[])
-{
-  if (argc < 4)
-  {
+int main(int argc, char *argv[]) {
+  if (argc < 4) {
     std::cerr << "Usage: ./program <data graph file> <query graph file> "
                  "<candidate set file>\n";
     return EXIT_FAILURE;

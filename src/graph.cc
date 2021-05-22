@@ -76,6 +76,9 @@ Graph::Graph(const std::string &filename, bool is_query) {
   label_.resize(num_vertices_);
 
   num_edges_ = 0;
+  //추가
+  Vertex edges[][2] = {0};
+  //추가 끝
 
   // preprocessing
   while (fin >> type) {
@@ -95,7 +98,10 @@ Graph::Graph(const std::string &filename, bool is_query) {
       Vertex v1, v2;
       Label l;
       fin >> v1 >> v2 >> l;
-
+      //추가
+      edges[num_edges_][0] = v1;
+      edges[num_edges_][1] = v2;
+      //추가 끝
       adj_list[v1].push_back(v2);
       adj_list[v2].push_back(v1);
 
@@ -127,8 +133,8 @@ Graph::Graph(const std::string &filename, bool is_query) {
 
     if (neighbors.size() == 0) continue;
 
-    // sort neighbors by ascending order of label first, and descending order of
-    // degree second
+    // sort neighbors by ascending order of label first, and descending order
+    // of degree second
     std::sort(neighbors.begin(), neighbors.end(), [this](Vertex u, Vertex v) {
       if (GetLabel(u) != GetLabel(v))
         return GetLabel(u) < GetLabel(v);
