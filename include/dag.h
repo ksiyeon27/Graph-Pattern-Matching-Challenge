@@ -6,12 +6,13 @@
 #ifndef DAG_H_
 #define DAG_H_
 
+#include "candidate_set.h"
 #include "common.h"
 #include "graph.h"
 
 class Dag {
  public:
-  explicit Dag(const Graph &query);
+  Dag(const Graph &query, const CandidateSet &cs);
   ~Dag();
 
   inline int32_t GetGraphID() const;
@@ -46,6 +47,11 @@ class Dag {
   inline bool HasParent(Vertex u, Vertex v) const;
 
  private:
+  static void AdjListToArray(
+      const Graph &query, std::vector<std::vector<Vertex>> &adj_list,
+      std::vector<Vertex> &adj_array, std::vector<size_t> &start_offset,
+      std::vector<std::pair<size_t, size_t>> &start_offset_by_label);
+
   const Graph &query_;
 
   std::vector<size_t> child_start_offset_;
