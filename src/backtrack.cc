@@ -32,12 +32,17 @@ void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
       std::cout << neighbor;
       if (neighbor == false) {
         embedding_i_true = false;
-        std::cout << "false";
         break;
       }
     }
 
-    std::cout << "Embedding" << i << " is" << embedding_i_true << "\n";
+    if (embedding_i_true == true) {
+      std::cout << " Embedding" << i << " is true "
+                << "\n";
+    } else {
+      std::cout << " Embedding" << i << " is false "
+                << "\n";
+    }
   }
 
   std::cout << " checking is done"

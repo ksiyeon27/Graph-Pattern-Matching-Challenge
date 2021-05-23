@@ -73,4 +73,7 @@ CMakeUserPresets.json
 # External projects
 *-prefix/
 
+
+# build
+build/
 # End of https://www.toptal.com/developers/gitignore/api/c++,visualstudiocode
