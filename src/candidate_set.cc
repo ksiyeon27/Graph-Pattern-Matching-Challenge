@@ -19,7 +19,6 @@ CandidateSet::CandidateSet(const std::string& filename) {
   fin >> type >> num_query_vertices;
 
   cs_.resize(num_query_vertices);
-  embeddings_.resize(embedding_id_ + 1);
 
   while (fin >> type) {
     if (type == 'c') {

@@ -1,5 +1,5 @@
 /**
- * @file main.cc
+ * @file checker.cc
  *
  */
 
