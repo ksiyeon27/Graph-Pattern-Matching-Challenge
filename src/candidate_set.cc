@@ -18,10 +18,13 @@ CandidateSet::CandidateSet(const std::string& filename) {
 
   fin >> type >> num_query_vertices;
 
-  cs_.resize(num_query_vertices);
   //추가
-  Vertex embedding_id = 0;
+  embedding_id_ = 0;
   //추가 끝
+
+  cs_.resize(num_query_vertices);
+  embeddings_.resize(embedding_id_ + 1);
+
   while (fin >> type) {
     if (type == 'c') {
       Vertex id;
@@ -40,17 +43,25 @@ CandidateSet::CandidateSet(const std::string& filename) {
 
     //추가
     else if (type == 'a') {
-      for (size_t i = 0; i < num_query_vertices; i++) {
+      embeddings_[embedding_id_].resize(num_query_vertices);
+
+      for (size_t j = 0; j < num_query_vertices; j++) {
         Vertex embedding_vertex;
         fin >> embedding_vertex;
-        embs_[embedding_id][i] = embedding_vertex;
+
+        embeddings_[embedding_id_][j] = embedding_vertex;
+        std::cout << embedding_id_ << j << " " << embeddings_[embedding_id_][j]
+                  << "\n";
       }
-      embedding_id++;
+      embedding_id_ += 1;
+      std::cout << GetEmbeddingNum() << "\n";
     }
     //추가 끝
+    embeddings_.resize(embedding_id_ + 1);
   }
 
   fin.close();
+  // std::cout << "cs";
 }
 
 CandidateSet::~CandidateSet() {}

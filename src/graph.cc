@@ -76,9 +76,6 @@ Graph::Graph(const std::string &filename, bool is_query) {
   label_.resize(num_vertices_);
 
   num_edges_ = 0;
-  //추가
-  Vertex edges[][2] = {0};
-  //추가 끝
 
   // preprocessing
   while (fin >> type) {
@@ -99,8 +96,10 @@ Graph::Graph(const std::string &filename, bool is_query) {
       Label l;
       fin >> v1 >> v2 >> l;
       //추가
-      edges[num_edges_][0] = v1;
-      edges[num_edges_][1] = v2;
+
+      std::pair<Vertex, Vertex> pair = std::make_pair(v1, v2);
+      edges_.push_back(pair);
+
       //추가 끝
       adj_list[v1].push_back(v2);
       adj_list[v2].push_back(v1);
@@ -108,7 +107,6 @@ Graph::Graph(const std::string &filename, bool is_query) {
       num_edges_ += 1;
     }
   }
-
   fin.close();
 
   adj_array_.resize(num_edges_ * 2);
