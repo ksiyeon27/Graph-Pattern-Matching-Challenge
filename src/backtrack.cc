@@ -10,7 +10,7 @@ Backtrack::~Backtrack() {}
 
 void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
                                 const CandidateSet &cs) {
-  // ÇÔ¼ö È®ÀÎ¿ë
+  // í•¨ìˆ˜ í™•ì¸ìš©
   // std::cout << "00 " << query.GetVertex1InEdge(0) << "\n";
   // std::cout << "10 " << query.GetVertex1InEdge(1) << "\n";
   // std::cout << "20 " << query.GetVertex1InEdge(2) << "\n";
@@ -22,7 +22,7 @@ void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
   // std::cout << "02 " << cs.GetEmbeddingVertex(0, 2) << "\n";
 
   for (size_t i = 0; i < cs.GetEmbeddingNum(); i++) {
-    //°¢ ÀÓº£µù¿¡ ´ëÇÏ¿©~
+    //ê° ì„ë² ë”©ë§ˆë‹¤ ì²´í¬.
     bool embedding_i_true = true;
 
     for (size_t k = 0; k < query.GetNumEdges(); k++) {
@@ -50,5 +50,5 @@ void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
             << "\n";
 }
 
-// output.txt¸¦ candidate_setÀÎ °ÍÃ³·³ CandidateSet Å¬·¡½º¸¦ ÀÌ¿ëÇØ °¡°øÇÔ.
-// graph, candidate, backtrack.cc ¼öÁ¤ÇÔ. (//Ãß°¡~ //Ãß°¡ ³¡)
+// output.txtë¥¼ candidate_setìë¦¬ì— ë„£ìŒ. CandidateSet ê°€ê³µí•¨.
+// backtrack.cc ì—ì„œ ì‹¤ì œ ì²´ì»¤ ì§„í–‰ì‹œí‚´.

@@ -95,12 +95,12 @@ Graph::Graph(const std::string &filename, bool is_query) {
       Vertex v1, v2;
       Label l;
       fin >> v1 >> v2 >> l;
-      //추가
+      // add
 
       std::pair<Vertex, Vertex> pair = std::make_pair(v1, v2);
       edges_.push_back(pair);
 
-      //추가 끝
+      // done
       adj_list[v1].push_back(v2);
       adj_list[v2].push_back(v1);
 

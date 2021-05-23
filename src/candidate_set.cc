@@ -18,9 +18,9 @@ CandidateSet::CandidateSet(const std::string& filename) {
 
   fin >> type >> num_query_vertices;
 
-  //추가
+  // add
   embedding_id_ = 0;
-  //추가 끝
+  // done
 
   cs_.resize(num_query_vertices);
   embeddings_.resize(embedding_id_ + 1);
@@ -41,7 +41,7 @@ CandidateSet::CandidateSet(const std::string& filename) {
       }
     }
 
-    //추가
+    // add
     else if (type == 'a') {
       embeddings_[embedding_id_].resize(num_query_vertices);
 
@@ -56,7 +56,7 @@ CandidateSet::CandidateSet(const std::string& filename) {
       }
       embedding_id_ += 1;
     }
-    //추가 끝
+    // done
     embeddings_.resize(embedding_id_ + 1);
   }
 
