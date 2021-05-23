@@ -8,8 +8,11 @@
 
 #include "common.h"
 
+class Dag;
+
 class Graph {
  public:
+  friend class Dag;
   explicit Graph(const std::string& filename, bool is_query = false);
   ~Graph();
 
