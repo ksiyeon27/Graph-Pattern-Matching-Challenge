@@ -24,23 +24,15 @@ void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
   for (size_t i = 0; i < cs.GetEmbeddingNum(); i++) {
     //각 임베딩에 대하여~
 
-    bool embedding_i_true = true;
     for (size_t k = 0; k < query.GetNumEdges(); k++) {
       Vertex v1 = cs.GetEmbeddingVertex(i, query.GetVertex1InEdge(k));
       Vertex v2 = cs.GetEmbeddingVertex(i, query.GetVertex2InEdge(k));
       bool neighbor = data.IsNeighbor(v1, v2);
-      if (neighbor == false) {
-        break;
-        embedding_i_true = false;
-        std::cout << "false";
-      }
+      std::cout << neighbor;
     }
-    if (embedding_i_true == true) {
-      std::cout << "Embedding" << i << " is true"
-                << "\n";
-    }
+    std::cout << "checking is done"
+              << "\n";
   }
-  std::cout << "checking is done";
 }
 
 // output.txt를 candidate_set인 것처럼 CandidateSet 클래스를 이용해 가공함.
