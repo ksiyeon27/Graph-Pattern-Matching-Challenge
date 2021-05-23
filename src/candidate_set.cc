@@ -50,8 +50,9 @@ CandidateSet::CandidateSet(const std::string& filename) {
         fin >> embedding_vertex;
 
         embeddings_[embedding_id_][j] = embedding_vertex;
-        std::cout << embedding_id_ << j << " " << embeddings_[embedding_id_][j]
-                  << "\n";
+        // std::cout << embedding_id_ << j << " " <<
+        // embeddings_[embedding_id_][j]
+        //           << "\n";
       }
       embedding_id_ += 1;
       std::cout << GetEmbeddingNum() << "\n";
