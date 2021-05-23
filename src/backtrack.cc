@@ -45,7 +45,8 @@ void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
     }
   }
 
-  std::cout << " checking is done"
+  std::cout << "\n"
+            << "checking is done"
             << "\n";
 }
 
