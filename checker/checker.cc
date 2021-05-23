@@ -1,5 +1,5 @@
 /**
- * @file checker.cc
+ * @file main.cc
  *
  */
 
@@ -12,7 +12,7 @@ Output::Output(const std::string &filename) {
   std::ifstream fin(filename);
 
   if (!fin.is_open()) {
-    std::cout << "Candidate set file " << filename << " not found!\n";
+    std::cout << "Output file " << filename << " not found!\n";
     exit(EXIT_FAILURE);
   }
 
