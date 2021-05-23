@@ -55,7 +55,6 @@ CandidateSet::CandidateSet(const std::string& filename) {
         //           << "\n";
       }
       embedding_id_ += 1;
-      std::cout << GetEmbeddingNum() << "\n";
     }
     //Ãß°¡ ³¡
     embeddings_.resize(embedding_id_ + 1);
