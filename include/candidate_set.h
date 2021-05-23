@@ -15,19 +15,9 @@ class CandidateSet {
 
   inline size_t GetCandidateSize(Vertex u) const;
   inline Vertex GetCandidate(Vertex u, size_t i) const;
-  // add
-  inline size_t GetEmbeddingNum() const;
-  inline Vertex GetEmbeddingVertex(size_t u, size_t i) const;
-
-  inline std::vector<std::vector<Vertex>> GetEmbeddings() const;
-  // done
 
  private:
   std::vector<std::vector<Vertex>> cs_;
-  // add
-  size_t embedding_id_;
-  std::vector<std::vector<Vertex>> embeddings_;
-  // done
 };
 
 /**
@@ -50,15 +40,5 @@ inline size_t CandidateSet::GetCandidateSize(Vertex u) const {
 inline Vertex CandidateSet::GetCandidate(Vertex u, size_t i) const {
   return cs_[u][i];
 }
-
-// add
-inline std::vector<std::vector<Vertex>> CandidateSet::GetEmbeddings() const {
-  return embeddings_;
-}
-inline size_t CandidateSet::GetEmbeddingNum() const { return embedding_id_; };
-inline Vertex CandidateSet::GetEmbeddingVertex(size_t u, size_t i) const {
-  return embeddings_[u][i];
-}
-// done
 
 #endif  // CANDIDATE_SET_H_

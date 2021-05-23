@@ -18,10 +18,6 @@ CandidateSet::CandidateSet(const std::string& filename) {
 
   fin >> type >> num_query_vertices;
 
-  // add
-  embedding_id_ = 0;
-  // done
-
   cs_.resize(num_query_vertices);
   embeddings_.resize(embedding_id_ + 1);
 
@@ -40,28 +36,10 @@ CandidateSet::CandidateSet(const std::string& filename) {
         cs_[id][i] = data_vertex;
       }
     }
-
-    // add
-    else if (type == 'a') {
-      embeddings_[embedding_id_].resize(num_query_vertices);
-
-      for (size_t j = 0; j < num_query_vertices; j++) {
-        Vertex embedding_vertex;
-        fin >> embedding_vertex;
-
-        embeddings_[embedding_id_][j] = embedding_vertex;
-        // std::cout << embedding_id_ << j << " " <<
-        // embeddings_[embedding_id_][j]
-        //           << "\n";
-      }
-      embedding_id_ += 1;
-    }
-    // done
-    embeddings_.resize(embedding_id_ + 1);
   }
 
   fin.close();
-  // std::cout << "cs";
+  std::cout << "cs";
 }
 
 CandidateSet::~CandidateSet() {}
