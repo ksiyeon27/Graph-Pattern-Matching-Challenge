@@ -15,6 +15,8 @@ class Dag {
   Dag(const Graph &query, const CandidateSet &cs);
   ~Dag();
 
+  void Dump();
+
   inline int32_t GetGraphID() const;
 
   inline size_t GetNumVertices() const;
