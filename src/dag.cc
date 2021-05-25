@@ -32,7 +32,10 @@ Dag::Dag(const Graph &query, const CandidateSet &cs)
 
   // Generate adjacency lists, both ways
   std::vector<bool> visited(query.GetNumVertices(), false);
+  std::vector<int> vertex_order(query.GetNumVertices());
+  int counter = query.GetNumVertices();
   visited[root] = true;
+  vertex_order[root] = counter--;
   queue.push_back(root);
   while (!queue.empty()) {
     Vertex u = queue.front();
@@ -40,10 +43,14 @@ Dag::Dag(const Graph &query, const CandidateSet &cs)
     for (size_t i = query.GetNeighborStartOffset(u);
          i < query.GetNeighborEndOffset(u); i++) {
       Vertex v = query.GetNeighbor(i);
+      if (vertex_order[u] > vertex_order[v]) {
+        child_adj_list[u].push_back(v);
+      } else {
+        parent_adj_list[u].push_back(v);
+      }
       if (!visited[v]) {
         visited[v] = true;
-        child_adj_list[u].push_back(v);
-        parent_adj_list[v].push_back(u);
+        vertex_order[v] = counter--;
         queue.push_back(v);
       }
     }
