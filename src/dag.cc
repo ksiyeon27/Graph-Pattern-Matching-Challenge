@@ -53,8 +53,6 @@ Dag::Dag(const Graph &query, const CandidateSet &cs)
                       child_start_offset_, child_start_offset_by_label_);
   Dag::AdjListToArray(query, parent_adj_list, parent_adj_array_,
                       parent_start_offset_, parent_start_offset_by_label_);
-
-  Dag::Dump();
 }
 
 Dag::~Dag() {}

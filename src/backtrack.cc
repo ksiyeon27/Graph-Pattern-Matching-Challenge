@@ -14,6 +14,7 @@ void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
                                 const CandidateSet &cs) {
   std::cout << "t " << query.GetNumVertices() << "\n";
 
-  Dag dag(query, cs);
   // implement your code here.
+  Dag dag(query, cs);
+  dag.Dump();
 }
