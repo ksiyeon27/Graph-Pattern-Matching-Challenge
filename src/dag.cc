@@ -143,7 +143,7 @@ void Dag::AdjListToArray(
     std::vector<Vertex> &adj_array, std::vector<size_t> &start_offset,
     std::vector<std::pair<size_t, size_t>> &start_offset_by_label) {
   size_t labels = query.max_label_ + 1;
-  adj_array.resize(query.adj_array_.size());
+  adj_array.resize(query.GetNumEdges());
   start_offset.resize(query.GetNumVertices() + 1);
   start_offset_by_label.resize(query.GetNumVertices() * labels);
 
