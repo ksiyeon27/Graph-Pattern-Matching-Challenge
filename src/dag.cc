@@ -62,6 +62,29 @@ Dag::~Dag() {}
 void Dag::Dump() {
   int i;
 
+  std::cout << "query_.adj_array_: [";
+  for (const Vertex v : query_.adj_array_) {
+    std::cout << v << ", ";
+  }
+  std::cout << "]\n";
+
+  std::cout << "query_.start_offset_: [";
+  for (const size_t x : query_.start_offset_) {
+    std::cout << x << ", ";
+  }
+  std::cout << "]\n";
+
+  std::cout << "query_.start_offset_by_label_: [\n";
+  i = 0;
+  for (const auto p : query_.start_offset_by_label_) {
+    std::cout << '(' << p.first << ", " << p.second << "), ";
+    if ((i + 1) % (max_label_ + 1) == 0) {
+      std::cout << '\n';
+    }
+    ++i;
+  }
+  std::cout << "]\n\n";
+
   std::cout << "child_adj_array_: [";
   for (const Vertex v : child_adj_array_) {
     std::cout << v << ", ";
