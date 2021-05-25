@@ -37,8 +37,9 @@ Dag::Dag(const Graph &query, const CandidateSet &cs)
   while (!queue.empty()) {
     Vertex u = queue.front();
     queue.pop_front();
-    for (size_t v = query.GetNeighborStartOffset(u);
-         v < query.GetNeighborEndOffset(u); v++) {
+    for (size_t i = query.GetNeighborStartOffset(u);
+         i < query.GetNeighborEndOffset(u); i++) {
+      Vertex v = query.GetNeighbor(i);
       if (!visited[v]) {
         visited[v] = true;
         child_adj_list[u].push_back(v);
