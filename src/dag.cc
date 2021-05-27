@@ -6,6 +6,7 @@
 #include "dag.h"
 
 #include <deque>
+#include <iostream>
 
 Dag::Dag(const Graph &query, const CandidateSet &cs)
     : query_(query), max_label_(query.max_label_) {
@@ -31,17 +32,25 @@ Dag::Dag(const Graph &query, const CandidateSet &cs)
 
   // Generate adjacency lists, both ways
   std::vector<bool> visited(query.GetNumVertices(), false);
+  std::vector<int> vertex_order(query.GetNumVertices());
+  int counter = query.GetNumVertices();
   visited[root] = true;
+  vertex_order[root] = counter--;
   queue.push_back(root);
   while (!queue.empty()) {
     Vertex u = queue.front();
     queue.pop_front();
-    for (size_t v = query.GetNeighborStartOffset(u);
-         v < query.GetNeighborEndOffset(u); v++) {
+    for (size_t i = query.GetNeighborStartOffset(u);
+         i < query.GetNeighborEndOffset(u); i++) {
+      Vertex v = query.GetNeighbor(i);
+      if (vertex_order[u] > vertex_order[v]) {
+        child_adj_list[u].push_back(v);
+      } else {
+        parent_adj_list[u].push_back(v);
+      }
       if (!visited[v]) {
         visited[v] = true;
-        child_adj_list[u].push_back(v);
-        parent_adj_list[v].push_back(u);
+        vertex_order[v] = counter--;
         queue.push_back(v);
       }
     }
@@ -56,12 +65,85 @@ Dag::Dag(const Graph &query, const CandidateSet &cs)
 
 Dag::~Dag() {}
 
+void Dag::Dump() {
+  int i;
+
+  std::cout << "query_.adj_array_: [";
+  for (const Vertex v : query_.adj_array_) {
+    std::cout << v << ", ";
+  }
+  std::cout << "]\n";
+
+  std::cout << "query_.start_offset_: [";
+  for (const size_t x : query_.start_offset_) {
+    std::cout << x << ", ";
+  }
+  std::cout << "]\n";
+
+  std::cout << "query_.start_offset_by_label_: [\n";
+  i = 0;
+  for (const auto p : query_.start_offset_by_label_) {
+    std::cout << '(' << p.first << ", " << p.second << "), ";
+    if ((i + 1) % (max_label_ + 1) == 0) {
+      std::cout << '\n';
+    }
+    ++i;
+  }
+  std::cout << "]\n\n";
+
+  std::cout << "child_adj_array_: [";
+  for (const Vertex v : child_adj_array_) {
+    std::cout << v << ", ";
+  }
+  std::cout << "]\n";
+
+  std::cout << "child_start_offset_: [";
+  for (const size_t x : child_start_offset_) {
+    std::cout << x << ", ";
+  }
+  std::cout << "]\n";
+
+  std::cout << "child_start_offset_by_label_: [\n";
+  i = 0;
+  for (const auto p : child_start_offset_by_label_) {
+    std::cout << '(' << p.first << ", " << p.second << "), ";
+    if ((i + 1) % (max_label_ + 1) == 0) {
+      std::cout << '\n';
+    }
+    ++i;
+  }
+  std::cout << "]\n\n";
+
+  std::cout << "parent_adj_array_: [";
+  for (const Vertex v : parent_adj_array_) {
+    std::cout << v << ", ";
+  }
+  std::cout << "]\n";
+
+  std::cout << "parent_start_offset_: [";
+  for (const size_t x : parent_start_offset_) {
+    std::cout << x << ", ";
+  }
+  std::cout << "]\n";
+
+  std::cout << "parent_start_offset_by_label_: [\n";
+  i = 0;
+  for (const auto p : parent_start_offset_by_label_) {
+    std::cout << '(' << p.first << ", " << p.second << "), ";
+    if ((i + 1) % (max_label_ + 1) == 0) {
+      std::cout << '\n';
+    }
+    ++i;
+  }
+  std::cout << "]\n\n";
+}
+
 void Dag::AdjListToArray(
     const Graph &query, std::vector<std::vector<Vertex>> &adj_list,
     std::vector<Vertex> &adj_array, std::vector<size_t> &start_offset,
     std::vector<std::pair<size_t, size_t>> &start_offset_by_label) {
   size_t labels = query.max_label_ + 1;
-  adj_array.resize(query.adj_array_.size());
+  adj_array.resize(query.GetNumEdges());
   start_offset.resize(query.GetNumVertices() + 1);
   start_offset_by_label.resize(query.GetNumVertices() * labels);
 
