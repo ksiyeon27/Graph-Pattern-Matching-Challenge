@@ -22,10 +22,11 @@ int main(int argc, char* argv[]) {
   Graph data(data_file_name);
   Graph query(query_file_name, true);
   CandidateSet candidate_set(candidate_set_file_name);
+  std::vector<std::pair<Vertex, Vertex>> mapping_output;
 
   Backtrack backtrack;
 
-  backtrack.PrintAllMatches(data, query, candidate_set);
+  backtrack.PrintAllMatches(data, query, candidate_set, mapping_output);
 
   return EXIT_SUCCESS;
 }
