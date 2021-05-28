@@ -10,9 +10,9 @@
 Backtrack::Backtrack() {}
 Backtrack::~Backtrack() {}
 
-void Backtrack::PrintAllMatches(
-    const Graph &data, const Graph &query, const CandidateSet &cs,
-    const std::vector<std::pair<Vertex, Vertex>> &map) {
+void Backtrack::RecursiveBacktrack(const Graph &data, const Graph &query,
+                                   const CandidateSet &cs,
+                                   const std::vector<Vertex> &map) {
   std::cout << "t " << query.GetNumVertices() << "\n";
   bool query_matched[query.GetNumVertices()] = {0};
   bool data_visited[data.GetNumVertices()] = {0};
@@ -24,10 +24,10 @@ void Backtrack::PrintAllMatches(
   // 루트 정하는 것도 구현해야될지? 일단 0으로 함.
   current_vertex_ = 0;
   // recursive backtrack
+  // void resize (size_type n, value_type val = value_type());
+  mapping_.resize(query.GetNumVertices());
 
   if (num_mapping_pairs_ == query.GetNumVertices()) {
-    std::sort(mapping_.begin(), mapping_.end(),
-              std::less<>());  // sort - by pair's first value - done
     for (size_t i = 0; i < num_mapping_pairs_; ++i) {
       std::cout << GetDataVertexInMapping(i);
     }
@@ -35,15 +35,13 @@ void Backtrack::PrintAllMatches(
 
   else if (num_mapping_pairs_ == 0) {
     for (size_t v = 0; v < cs.GetCandidateSize(root_); v++) {
-      std::pair<Vertex, Vertex> mapping_pair =
-          std::make_pair(root_, cs.GetCandidate(root_, v));
-      mapping_.push_back(mapping_pair);
+      mapping_[root_] = cs.GetCandidate(root_, v);
       num_mapping_pairs_ += 1;
       data_visited[v] = 1;
       query_matched[root_] = 1;
 
       PrintAllMatches(data, query, cs, mapping_);
-      mapping_.pop_back();
+      mapping_[root_] = 0;
       num_mapping_pairs_ -= 1;
       data_visited[v] = 0;
       query_matched[root_] = 0;
@@ -82,17 +80,12 @@ void Backtrack::PrintAllMatches(
       for (size_t exv_parent_os = dag.GetParentStartOffset(exv);
            exv_parent_os < dag.GetParentEndOffset(exv); exv_parent_os++) {
         Vertex exv_parent = dag.GetParent(exv_parent_os);
-        Vertex dv_matched_with_parent = -1;
+        Vertex dv_matched_with_parent = mapping_[exv_parent];
 
-        // mapping을 직접 돌면서 exv의 parent와 매치된 data vertex 찾기 -
-        // 비효율적.
-        for (const std::pair<Vertex, Vertex> pair : mapping_) {
-          if (pair.first == exv_parent) {
-            Vertex dv_matched_with_parent = pair.second;
-          }
-        }
         for (size_t cuv = 0; cuv < cs.GetCandidateSize(exv); cuv++) {
-          data.IsNeighbor(cuv, dv_matched_with_parent);
+          // data.IsNeighbor(cuv, dv_matched_with_parent);
+          // -> 이런식으로 edge확인..
+
           // dv_matched_with_parent 와의 edge가 있는지 확인 -> 없으면 위
           // vector에서 해당 Vertex candidate 지우기-> 역시 candidate set 수정이
           // 빠를듯.
@@ -119,14 +112,13 @@ void Backtrack::PrintAllMatches(
     // 아예 cs 클래스를 수정하는게 나은가?
     for (size_t v = 0; v < cs.GetCandidateSize(current_vertex_); v++) {
       if (data_visited[v] == 0) {
-        std::pair<Vertex, Vertex> mapping_pair = std::make_pair(
-            current_vertex_, cs.GetCandidate(current_vertex_, v));
-        mapping_.push_back(mapping_pair);
+        mapping_[current_vertex_] = cs.GetCandidate(current_vertex_, v);
         num_mapping_pairs_ += 1;
         data_visited[v] = 1;
         query_matched[current_vertex_] = 1;
         PrintAllMatches(data, query, cs, mapping_);
-        mapping_.pop_back();
+        num_mapping_pairs_ -= 1;
+        mapping_[current_vertex_] = 0;
         data_visited[v] = 0;
         query_matched[current_vertex_] = 0;
       }

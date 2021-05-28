@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
   Graph data(data_file_name);
   Graph query(query_file_name, true);
   CandidateSet candidate_set(candidate_set_file_name);
-  std::vector<std::pair<Vertex, Vertex>> mapping_output;
+  std::vector<Vertex> mapping_output;
 
   Backtrack backtrack;
 
