@@ -262,9 +262,7 @@ inline Vertex Dag::GetParent(size_t offset) const {
  *
  * @return Vertex
  */
-inline Vertex Dag::GetRoot() const {
-  return root_;
-}
+inline Vertex Dag::GetRoot() const { return root_; }
 
 /**
  * @brief Returns true if there is an edge from u to v, otherwise return false.
