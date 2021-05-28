@@ -43,6 +43,7 @@ class Dag {
   inline Label GetLabel(Vertex v) const;
   inline Vertex GetChild(size_t offset) const;
   inline Vertex GetParent(size_t offset) const;
+  inline Vertex GetRoot() const;
 
   inline bool HasEdge(Vertex u, Vertex v) const;
   inline bool HasChild(Vertex u, Vertex v) const;
@@ -66,6 +67,7 @@ class Dag {
   std::vector<Vertex> parent_adj_array_;
 
   Label max_label_;
+  Vertex root_;
 };
 
 /**
@@ -254,6 +256,14 @@ inline Vertex Dag::GetChild(size_t offset) const {
  */
 inline Vertex Dag::GetParent(size_t offset) const {
   return parent_adj_array_[offset];
+}
+/**
+ * @brief Returns the root of the graph.
+ *
+ * @return Vertex
+ */
+inline Vertex Dag::GetRoot() const {
+  return root_;
 }
 
 /**
