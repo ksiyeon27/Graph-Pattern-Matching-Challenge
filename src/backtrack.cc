@@ -75,7 +75,7 @@ void Backtrack::PrintAllMatches(
       std::vector<std::pair<Vertex, std::vector<Vertex>>>
           allexv_candidateset_modified;
       allexv_candidateset_modified.resize(extendable_vertex.size());
-      // candidate set 모두 넣어놓기
+      // allexv_candidateset_modified에 각 candidate set 모두 넣어놓기
       for (size_t exv_parent_os = dag.GetParentStartOffset(exv);
            exv_parent_os < dag.GetParentEndOffset(exv); exv_parent_os++) {
         Vertex exv_parent = dag.GetParent(exv_parent_os);
@@ -112,8 +112,8 @@ void Backtrack::PrintAllMatches(
     }
 
     // 4. 수도 코드 내용.
-    // 밑에서 cs 이용한 것도 다 cs_modified 버전으로 바꿔야 함. 아예 cs
-    // 클래스를 수정하는게 나은가?
+    // 밑에서 cs 이용한 것도 다 cs_modified 버전으로 바꿔야 함.
+    // 아예 cs 클래스를 수정하는게 나은가?
     for (size_t v = 0; v < cs.GetCandidateSize(current_vertex_); v++) {
       if (data_visited[v] == 0) {
         std::pair<Vertex, Vertex> mapping_pair = std::make_pair(
@@ -127,3 +127,6 @@ void Backtrack::PrintAllMatches(
       }
     }
   }
+
+  // cs_의 값이 바뀌어도 된다면 cs_modified_를 따로 쓰는 것보다 그냥 cs_에서
+  // 값을 빼는 방식으로 하면 될듯.
