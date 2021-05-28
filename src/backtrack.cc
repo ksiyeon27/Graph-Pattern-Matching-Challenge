@@ -21,18 +21,19 @@ void Backtrack::RecursiveBacktrack(const Graph &data, const Graph &query,
   Dag dag(query, cs);
   dag.Dump();
   root_ = 0;
-  // 루트 정하는 것도 구현해야될지? 일단 0으로 함.
+  // 루트 -> dag 의 root 받아오기
   current_vertex_ = 0;
   // recursive backtrack
-  // void resize (size_type n, value_type val = value_type());
   mapping_.resize(query.GetNumVertices());
 
+  // # mapping 1개 완료 -> 출력
   if (num_mapping_pairs_ == query.GetNumVertices()) {
     for (size_t i = 0; i < num_mapping_pairs_; ++i) {
       std::cout << GetDataVertexInMapping(i);
     }
   }
 
+  // ## mapping이 하나도 없는 상태 -> root 부터 시작
   else if (num_mapping_pairs_ == 0) {
     for (size_t v = 0; v < cs.GetCandidateSize(root_); v++) {
       mapping_[root_] = cs.GetCandidate(root_, v);
@@ -40,7 +41,7 @@ void Backtrack::RecursiveBacktrack(const Graph &data, const Graph &query,
       data_visited[v] = 1;
       query_matched[root_] = 1;
 
-      PrintAllMatches(data, query, cs, mapping_);
+      RecursiveBacktrack(data, query, cs, mapping_);
       mapping_[root_] = 0;
       num_mapping_pairs_ -= 1;
       data_visited[v] = 0;
@@ -48,10 +49,11 @@ void Backtrack::RecursiveBacktrack(const Graph &data, const Graph &query,
     }
   }
 
+  // ### mapping 진행중 - extendable vertex 중 min weight 골라서 시작.
   else {
     // 1. extendable_vertex 만들기 - 매 backtrack마다 초기화됨.
     // vertex u is extendable if "all" parents of u are matched in mapping_.
-    // 매번 query의 모든 vertex 확인 - 비효율적.
+    // 매번 query의 모든 vertex 확인 - 비효율적. ->
     for (Vertex u = 0; u < query.GetNumVertices(); u++) {
       bool all_parents_matched = 1;
 
@@ -116,7 +118,7 @@ void Backtrack::RecursiveBacktrack(const Graph &data, const Graph &query,
         num_mapping_pairs_ += 1;
         data_visited[v] = 1;
         query_matched[current_vertex_] = 1;
-        PrintAllMatches(data, query, cs, mapping_);
+        RecursiveBacktrack(data, query, cs, mapping_);
         num_mapping_pairs_ -= 1;
         mapping_[current_vertex_] = 0;
         data_visited[v] = 0;
