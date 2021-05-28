@@ -22,7 +22,7 @@ class Backtrack {
   inline Vertex GetDataVertexInMapping(size_t i) const;
 
  private:
-  size_t num_mapping_pairs_;
+  size_t num_mapping_pairs_ = 0;
   std::vector<std::pair<Vertex, Vertex>> mapping_;
   Vertex root_;
   Vertex current_vertex_;

@@ -38,10 +38,13 @@ void Backtrack::PrintAllMatches(
       std::pair<Vertex, Vertex> mapping_pair =
           std::make_pair(root_, cs.GetCandidate(root_, v));
       mapping_.push_back(mapping_pair);
+      num_mapping_pairs_ += 1;
       data_visited[v] = 1;
       query_matched[root_] = 1;
 
       PrintAllMatches(data, query, cs, mapping_);
+      mapping_.pop_back();
+      num_mapping_pairs_ -= 1;
       data_visited[v] = 0;
       query_matched[root_] = 0;
     }
@@ -58,7 +61,7 @@ void Backtrack::PrintAllMatches(
       for (size_t os = dag.GetParentStartOffset(u);
            os < dag.GetParentEndOffset(u); os++) {
         Vertex parent = dag.GetParent(os);
-        if (query_matched[parent] == 1) {
+        if (query_matched[parent] == 0) {
           all_parents_matched = 0;
           break;
         }
@@ -119,14 +122,13 @@ void Backtrack::PrintAllMatches(
         std::pair<Vertex, Vertex> mapping_pair = std::make_pair(
             current_vertex_, cs.GetCandidate(current_vertex_, v));
         mapping_.push_back(mapping_pair);
+        num_mapping_pairs_ += 1;
         data_visited[v] = 1;
         query_matched[current_vertex_] = 1;
         PrintAllMatches(data, query, cs, mapping_);
+        mapping_.pop_back();
         data_visited[v] = 0;
         query_matched[current_vertex_] = 0;
       }
     }
   }
-
-  // cs_의 값이 바뀌어도 된다면 cs_modified_를 따로 쓰는 것보다 그냥 cs_에서
-  // 값을 빼는 방식으로 하면 될듯.
