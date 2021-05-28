@@ -120,10 +120,10 @@ void Backtrack::PrintAllMatches(
             current_vertex_, cs.GetCandidate(current_vertex_, v));
         mapping_.push_back(mapping_pair);
         data_visited[v] = 1;
-        query_matched[root_] = 1;
+        query_matched[current_vertex_] = 1;
         PrintAllMatches(data, query, cs, mapping_);
         data_visited[v] = 0;
-        query_matched[root_] = 0;
+        query_matched[current_vertex_] = 0;
       }
     }
   }
