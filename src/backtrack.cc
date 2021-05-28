@@ -20,7 +20,7 @@ void Backtrack::RecursiveBacktrack(const Graph &data, const Graph &query,
   // dag checking
   Dag dag(query, cs);
   dag.Dump();
-  root_ = 0;
+  root_ = dag.GetRoot();
   // 루트 -> dag 의 root 받아오기
   current_vertex_ = 0;
   // recursive backtrack

@@ -24,6 +24,7 @@ Dag::Dag(const Graph &query, const CandidateSet &cs)
       root = i;
     }
   }
+  root_ = root;
 
   std::vector<std::vector<Vertex>> child_adj_list(query.GetNumVertices());
   std::vector<std::vector<Vertex>> parent_adj_list(query.GetNumVertices());
