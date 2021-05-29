@@ -89,7 +89,8 @@ int main(int argc, char *argv[]) {
   std::string output_file_name = argv[3];
 
   Graph data(data_file_name);
-  Graph query(query_file_name, true);
+  // Graph query(query_file_name, true);
+  Graph query(query_file_name, 2);
   Output output(output_file_name);
 
   output.isValidate(data, query);

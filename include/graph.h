@@ -10,7 +10,10 @@
 
 class Graph {
  public:
-  explicit Graph(const std::string& filename, bool is_query = false);
+  explicit Graph(const std::string &filename, bool is_query = false);
+  // add
+  explicit Graph(const std::string &filename, const int &check);
+  // done
   ~Graph();
 
   inline int32_t GetGraphID() const;
