@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.0)
 project(subgraph_matching)
 
 add_compile_options(-O3)
+add_definitions(-DNDEBUG)
+# add_compile_options(-g)
 add_compile_options(-Wall)
 add_compile_options(-std=c++11)
 
