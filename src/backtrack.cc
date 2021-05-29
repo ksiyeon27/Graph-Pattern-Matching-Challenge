@@ -113,7 +113,7 @@ void Backtrack::RecursiveBacktrack(
                  queue);
       RecursiveBacktrack(num_mapping_pairs + 1, data, query, dag, cs, mapping,
                          data_visited, extendable_cs, queue);
-      RemoveMapping(root_, v, dag, mapping, data_visited, extendable_cs);
+      RemoveMapping(root_, v, dag, mapping, data_visited, extendable_cs, queue);
     }
     return;
   }
@@ -122,6 +122,7 @@ void Backtrack::RecursiveBacktrack(
   // 1. extendable vertex 찾기
   if (queue.empty()) {
     GRAPH_PATTERN_MATCHING_CHALLENGE_LOG("queue is empty");
+    return;
   }
   Vertex prev_vertex = current_vertex_;
   current_vertex_ = queue.top();
@@ -139,11 +140,12 @@ void Backtrack::RecursiveBacktrack(
       RecursiveBacktrack(num_mapping_pairs + 1, data, query, dag, cs, mapping,
                          data_visited, extendable_cs, queue);
       RemoveMapping(current_vertex_, v, dag, mapping, data_visited,
-                    extendable_cs);
+                    extendable_cs, queue);
     }
   }
   GRAPH_PATTERN_MATCHING_CHALLENGE_LOG("backtrack from query vertex u = %d",
                                        current_vertex_);
 
+  queue.push(current_vertex_);
   current_vertex_ = prev_vertex;
 }

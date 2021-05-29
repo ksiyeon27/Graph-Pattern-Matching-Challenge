@@ -37,10 +37,12 @@ class Backtrack {
       std::priority_queue<Vertex, std::vector<Vertex>,
                           std::function<bool(Vertex, Vertex)>> &queue);
 
-  inline void RemoveMapping(Vertex u, Vertex v, const Dag &dag,
-                            std::vector<Vertex> &mapping,
-                            std::vector<bool> &data_visited,
-                            std::vector<std::vector<Vertex>> &extendable_cs);
+  inline void RemoveMapping(
+      Vertex u, Vertex v, const Dag &dag, std::vector<Vertex> &mapping,
+      std::vector<bool> &data_visited,
+      std::vector<std::vector<Vertex>> &extendable_cs,
+      std::priority_queue<Vertex, std::vector<Vertex>,
+                          std::function<bool(Vertex, Vertex)>> &queue);
 
   void RecursiveBacktrack(
       size_t num_mapping_pairs, const Graph &data, const Graph &query,
@@ -76,10 +78,15 @@ inline void Backtrack::AddMapping(
 inline void Backtrack::RemoveMapping(
     Vertex u, Vertex v, const Dag &dag, std::vector<Vertex> &mapping,
     std::vector<bool> &data_visited,
-    std::vector<std::vector<Vertex>> &extendable_cs) {
+    std::vector<std::vector<Vertex>> &extendable_cs,
+    std::priority_queue<Vertex, std::vector<Vertex>,
+                        std::function<bool(Vertex, Vertex)>> &queue) {
   for (size_t i = dag.GetChildStartOffset(u); i < dag.GetChildEndOffset(u);
        ++i) {
     extendable_cs[dag.GetChild(i)].clear();
+  }
+  while (!queue.empty() && extendable_cs[queue.top()].empty()) {
+    queue.pop();
   }
   data_visited[v] = false;
   mapping[u] = -1;
