@@ -11,9 +11,7 @@
 class Graph {
  public:
   explicit Graph(const std::string &filename, bool is_query = false);
-  // add
-  explicit Graph(const std::string &filename, const int &check);
-  // done
+
   ~Graph();
 
   inline int32_t GetGraphID() const;
@@ -38,20 +36,12 @@ class Graph {
 
   inline bool IsNeighbor(Vertex u, Vertex v) const;
 
-  // add
-  inline Vertex GetVertex1InEdge(size_t i) const;
-  inline Vertex GetVertex2InEdge(size_t i) const;
-  // done
-
  private:
   int32_t graph_id_;
 
   size_t num_vertices_;
   size_t num_edges_;
   size_t num_labels_;
-  // add
-  std::vector<std::pair<Vertex, Vertex>> edges_;
-  // done
   std::vector<size_t> label_frequency_;
 
   std::vector<size_t> start_offset_;
@@ -87,17 +77,6 @@ inline size_t Graph::GetNumEdges() const { return num_edges_; }
  *
  * @return size_t
  */
-
-// add
-
-inline Vertex Graph::GetVertex1InEdge(size_t i) const {
-  return edges_[i].first;
-}
-inline Vertex Graph::GetVertex2InEdge(size_t i) const {
-  return edges_[i].second;
-}
-
-// done
 
 inline size_t Graph::GetNumLabels() const { return num_labels_; }
 

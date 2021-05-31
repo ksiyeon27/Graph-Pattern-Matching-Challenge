@@ -6,6 +6,7 @@
 #ifndef CHECKER_H_
 #define CHECKER_H_
 
+#include "checkergraph.h"
 #include "common.h"
 #include "graph.h"
 
@@ -17,7 +18,7 @@ class Output {
   inline Vertex GetEmbeddingVertex(size_t u, size_t i) const;
 
   inline std::vector<std::vector<Vertex>> GetEmbeddings() const;
-  void isValidate(const Graph &data, const Graph &query);
+  void isValidate(const Graph &data, const Checkergraph &query);
 
  private:
   size_t embedding_id_;

@@ -5,6 +5,7 @@
 
 #include "checker.h"
 
+#include "checkergraph.h"
 #include "common.h"
 #include "graph.h"
 
@@ -47,7 +48,7 @@ Output::Output(const std::string &filename) {
 }
 Output::~Output() {}
 
-void Output::isValidate(const Graph &data, const Graph &query) {
+void Output::isValidate(const Graph &data, const Checkergraph &query) {
   for (size_t i = 0; i < GetEmbeddingNum(); i++) {
     //각 임베딩마다 체크.
     bool embedding_i_true = true;
@@ -79,7 +80,7 @@ void Output::isValidate(const Graph &data, const Graph &query) {
 
 int main(int argc, char *argv[]) {
   if (argc < 4) {
-    std::cerr << "Usage: ./program <data graph file> <query graph file> "
+    std::cerr << "Usage: ./program <data graph file> <query checkergraph file> "
                  "<output file>\n";
     return EXIT_FAILURE;
   }
@@ -89,10 +90,9 @@ int main(int argc, char *argv[]) {
   std::string output_file_name = argv[3];
 
   Graph data(data_file_name);
-  // Graph query(query_file_name, true);
-  Graph query(query_file_name, 2);
+  Checkergraph checkerquery(query_file_name, true);
   Output output(output_file_name);
 
-  output.isValidate(data, query);
+  output.isValidate(data, checkerquery);
   return EXIT_SUCCESS;
 }

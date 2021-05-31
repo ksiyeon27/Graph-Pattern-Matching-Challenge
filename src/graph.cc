@@ -51,69 +51,6 @@ void TransferLabel(const std::string &filename) {
 }
 }  // namespace
 
-// add - new constructor
-Graph::Graph(const std::string &filename, const int &check) {
-  if (check != 2) {
-    // error
-    std::cout << "wrong";
-  } else {
-    std::vector<std::vector<Vertex>> adj_list;
-
-    // Load Graph
-    std::ifstream fin(filename);
-    std::set<Label> label_set;
-
-    if (!fin.is_open()) {
-      std::cout << "Graph file " << filename << " not found!\n";
-      exit(EXIT_FAILURE);
-    }
-
-    char type;
-
-    fin >> type >> graph_id_ >> num_vertices_;
-
-    adj_list.resize(num_vertices_);
-
-    start_offset_.resize(num_vertices_ + 1);
-    label_.resize(num_vertices_);
-
-    num_edges_ = 0;
-
-    // preprocessing
-    while (fin >> type) {
-      if (type == 'v') {
-        Vertex id;
-        Label l;
-        fin >> id >> l;
-
-        if (static_cast<size_t>(l) >= transferred_label.size())
-          l = -1;
-        else
-          l = transferred_label[l];
-
-        label_[id] = l;
-        label_set.insert(l);
-      } else if (type == 'e') {
-        Vertex v1, v2;
-        Label l;
-        fin >> v1 >> v2 >> l;
-        // add
-
-        std::pair<Vertex, Vertex> pair = std::make_pair(v1, v2);
-        edges_.push_back(pair);
-
-        // done
-        adj_list[v1].push_back(v2);
-        adj_list[v2].push_back(v1);
-
-        num_edges_ += 1;
-      }
-    }
-    fin.close();
-  }
-}
-// done
-
 Graph::Graph(const std::string &filename, bool is_query) {
   if (!is_query) {
     TransferLabel(filename);
