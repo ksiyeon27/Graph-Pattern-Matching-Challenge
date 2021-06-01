@@ -44,7 +44,6 @@ class Graph {
   size_t num_vertices_;
   size_t num_edges_;
   size_t num_labels_;
-
   std::vector<size_t> label_frequency_;
 
   std::vector<size_t> start_offset_;
@@ -80,6 +79,7 @@ inline size_t Graph::GetNumEdges() const { return num_edges_; }
  *
  * @return size_t
  */
+
 inline size_t Graph::GetNumLabels() const { return num_labels_; }
 
 /**
@@ -179,6 +179,7 @@ inline Vertex Graph::GetNeighbor(size_t offset) const {
  * @param v vertex id.
  * @return bool
  */
+
 inline bool Graph::IsNeighbor(Vertex u, Vertex v) const {
   if (GetNeighborLabelFrequency(u, GetLabel(v)) >
       GetNeighborLabelFrequency(v, GetLabel(u)))
