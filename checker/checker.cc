@@ -21,13 +21,14 @@ Output::Output(const std::string &filename) {
   size_t num_query_vertices;
 
   fin >> type >> num_query_vertices;
-
+  std::cout << "num_query_vertices " << num_query_vertices << "\n";
   embedding_id_ = 0;
   embeddings_.resize(embedding_id_ + 1);
 
   while (fin >> type) {
     if (type == 'a') {
       embeddings_[embedding_id_].resize(num_query_vertices);
+      // std::cout << "embedding_id_ " << embedding_id_ << "\n";
       for (size_t j = 0; j < num_query_vertices; j++) {
         Vertex embedding_vertex;
         fin >> embedding_vertex;
@@ -57,7 +58,7 @@ void Output::isValidate(const Graph &data, const Checkergraph &query) {
       Vertex v1 = GetEmbeddingVertex(i, query.GetVertex1InEdge(k));
       Vertex v2 = GetEmbeddingVertex(i, query.GetVertex2InEdge(k));
       bool neighbor = data.IsNeighbor(v1, v2);
-      std::cout << neighbor;
+      // std::cout << neighbor;
       if (neighbor == false) {
         embedding_i_true = false;
         break;
