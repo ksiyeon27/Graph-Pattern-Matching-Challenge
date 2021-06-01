@@ -8,10 +8,12 @@
 
 #include "common.h"
 
+class Dag;
+
 class Graph {
  public:
-  explicit Graph(const std::string &filename, bool is_query = false);
-
+  friend class Dag;
+  explicit Graph(const std::string& filename, bool is_query = false);
   ~Graph();
 
   inline int32_t GetGraphID() const;
