@@ -5,124 +5,147 @@
 
 #include "backtrack.h"
 
-#include "dag.h"
-
 Backtrack::Backtrack() {}
 Backtrack::~Backtrack() {}
 
-void Backtrack::RecursiveBacktrack(const Graph &data, const Graph &query,
-                                   const CandidateSet &cs,
-                                   const std::vector<Vertex> &map) {
+void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
+                                const CandidateSet &cs) {
   std::cout << "t " << query.GetNumVertices() << "\n";
-  bool query_matched[query.GetNumVertices()] = {0};
-  bool data_visited[data.GetNumVertices()] = {0};
-  std::vector<Vertex> extendable_vertex;
-  // dag checking
+
+  // implement your code here.
+
   Dag dag(query, cs);
-  dag.Dump();
-  root_ = dag.GetRoot();
-  // 루트 -> dag 의 root 받아오기
-  current_vertex_ = 0;
   // recursive backtrack
-  mapping_.resize(query.GetNumVertices());
+  std::vector<Vertex> mapping(query.GetNumVertices(), -1);
+  // data_visited[v] is true iff vertex v of data graph is marked as visited
+  std::vector<bool> data_visited(data.GetNumVertices(), false);
+  // set of extendable candidates
+  std::vector<std::vector<Vertex>> extendable_cs(query.GetNumVertices());
+  for (Vertex u = 0; u < static_cast<Vertex>(query.GetNumVertices()); ++u) {
+    extendable_cs[u].reserve(cs.GetCandidateSize(u));
+  }
+
+  // candidate set size(|C_M(u)|)에 대해 내림차순으로 정렬
+  auto candidate_size_order = [&extendable_cs](Vertex u, Vertex v) {
+    return extendable_cs[u].size() > extendable_cs[v].size();
+  };
+  std::priority_queue<Vertex, std::vector<Vertex>,
+                      std::function<bool(Vertex, Vertex)>>
+      queue(candidate_size_order);
+
+  RecursiveBacktrack(0, data, query, dag, cs, mapping, data_visited,
+                     extendable_cs, queue);
+
+  GRAPH_PATTERN_MATCHING_CHALLENGE_LOG("End printing");
+}
+
+void Backtrack::AddExtendableVertex(
+    Vertex u, const Graph &data, const Dag &dag, const CandidateSet &cs,
+    const std::vector<Vertex> &mapping,
+    std::vector<std::vector<Vertex>> &extendable_cs,
+    std::priority_queue<Vertex, std::vector<Vertex>,
+                        std::function<bool(Vertex, Vertex)>> &queue) {
+  std::vector<Vertex> mapped_parents;
+  for (size_t i = dag.GetParentStartOffset(u); i < dag.GetParentEndOffset(u);
+       ++i) {
+    // v = M(p_i) (Definition 5.2)
+    Vertex v = mapping[dag.GetParent(i)];
+    // If mapping exists
+    if (v >= 0) {
+      mapped_parents.push_back(v);
+    } else {
+      // u is not extendable
+      GRAPH_PATTERN_MATCHING_CHALLENGE_LOG(
+          "node %d is not extendable because parent node %d is not embedded", u,
+          dag.GetParent(i));
+      return;
+    }
+  }
+
+  for (size_t i = 0; i < cs.GetCandidateSize(u); ++i) {
+    Vertex candidate = cs.GetCandidate(u, i);
+    bool is_extendable_candidate = true;
+    for (const Vertex v : mapped_parents) {
+      if (!data.IsNeighbor(v, candidate)) {
+        is_extendable_candidate = false;
+        break;
+      }
+    }
+    if (is_extendable_candidate) {
+      extendable_cs[u].push_back(candidate);
+    }
+  }
+  GRAPH_PATTERN_MATCHING_CHALLENGE_LOG(
+      "extendable candidates of %d: %s", u,
+      vector_to_string(extendable_cs[u]).c_str());
+
+  queue.push(u);
+}
+
+void Backtrack::RecursiveBacktrack(
+    size_t num_mapping_pairs, const Graph &data, const Graph &query,
+    const Dag &dag, const CandidateSet &cs, std::vector<Vertex> &mapping,
+    std::vector<bool> &data_visited,
+    std::vector<std::vector<Vertex>> &extendable_cs,
+    std::priority_queue<Vertex, std::vector<Vertex>,
+                        std::function<bool(Vertex, Vertex)>> &queue) {
+  GRAPH_PATTERN_MATCHING_CHALLENGE_LOG("current mapping: %s",
+                                       vector_to_string(mapping).c_str());
 
   // # mapping 1개 완료 -> 출력
-  if (num_mapping_pairs_ == query.GetNumVertices()) {
-    for (size_t i = 0; i < num_mapping_pairs_; ++i) {
-      std::cout << GetDataVertexInMapping(i);
+  if (num_mapping_pairs == query.GetNumVertices()) {
+    std::cout << "a ";
+    for (const Vertex v : mapping) {
+      std::cout << v << ' ';
     }
+    std::cout << '\n';
+    return;
   }
 
   // ## mapping이 하나도 없는 상태 -> root 부터 시작
-  else if (num_mapping_pairs_ == 0) {
-    for (size_t v = 0; v < cs.GetCandidateSize(root_); v++) {
-      mapping_[root_] = cs.GetCandidate(root_, v);
-      num_mapping_pairs_ += 1;
-      data_visited[v] = 1;
-      query_matched[root_] = 1;
-
-      RecursiveBacktrack(data, query, cs, mapping_);
-      mapping_[root_] = 0;
-      num_mapping_pairs_ -= 1;
-      data_visited[v] = 0;
-      query_matched[root_] = 0;
+  if (num_mapping_pairs == 0) {
+    // 루트 -> dag 의 root 받아오기
+    root_ = dag.GetRoot();
+    for (size_t i = 0; i < cs.GetCandidateSize(root_); ++i) {
+      Vertex v = cs.GetCandidate(root_, i);
+      GRAPH_PATTERN_MATCHING_CHALLENGE_LOG("map %d -> %d", root_, v);
+      AddMapping(root_, v, data, dag, cs, mapping, data_visited, extendable_cs,
+                 queue);
+      RecursiveBacktrack(num_mapping_pairs + 1, data, query, dag, cs, mapping,
+                         data_visited, extendable_cs, queue);
+      RemoveMapping(root_, v, dag, mapping, data_visited, extendable_cs, queue);
     }
+    return;
   }
 
   // ### mapping 진행중 - extendable vertex 중 min weight 골라서 시작.
-  else {
-    // 1. extendable_vertex 만들기 - 매 backtrack마다 초기화됨.
-    // vertex u is extendable if "all" parents of u are matched in mapping_.
-    // 매번 query의 모든 vertex 확인 - 비효율적. ->
-    for (Vertex u = 0; u < query.GetNumVertices(); u++) {
-      bool all_parents_matched = 1;
+  // 1. extendable vertex 찾기
+  if (queue.empty()) {
+    GRAPH_PATTERN_MATCHING_CHALLENGE_LOG("queue is empty");
+    return;
+  }
+  Vertex prev_vertex = current_vertex_;
+  current_vertex_ = queue.top();
+  queue.pop();
 
-      // all parents of u checking
-      for (size_t os = dag.GetParentStartOffset(u);
-           os < dag.GetParentEndOffset(u); os++) {
-        Vertex parent = dag.GetParent(os);
-        if (query_matched[parent] == 0) {
-          all_parents_matched = 0;
-          break;
-        }
-      }
-      // done
-
-      if (all_parents_matched == 1) {
-        extendable_vertex.push_back(u);
-      }
-    }
-
-    // 2. cs_modified 만들기(pdf p.20) - 해야 됨.
-    for (const Vertex exv : extendable_vertex) {
-      std::vector<std::pair<Vertex, std::vector<Vertex>>>
-          allexv_candidateset_modified;
-      allexv_candidateset_modified.resize(extendable_vertex.size());
-      // allexv_candidateset_modified에 각 candidate set 모두 넣어놓기
-      for (size_t exv_parent_os = dag.GetParentStartOffset(exv);
-           exv_parent_os < dag.GetParentEndOffset(exv); exv_parent_os++) {
-        Vertex exv_parent = dag.GetParent(exv_parent_os);
-        Vertex dv_matched_with_parent = mapping_[exv_parent];
-
-        for (size_t cuv = 0; cuv < cs.GetCandidateSize(exv); cuv++) {
-          // data.IsNeighbor(cuv, dv_matched_with_parent);
-          // -> 이런식으로 edge확인..
-
-          // dv_matched_with_parent 와의 edge가 있는지 확인 -> 없으면 위
-          // vector에서 해당 Vertex candidate 지우기-> 역시 candidate set 수정이
-          // 빠를듯.
-        }
-      }
-    }
-    // done
-
-    // 3. min_candidate_modified_size의 vertex를 extendable_vertex 중 찾기.
-    size_t min_candidate_modified_size = 10000000000;
-    current_vertex_ = 0;
-
-    for (const Vertex exv : extendable_vertex) {
-      size_t exv_candidate_modified_size = cs.GetCandidateSize(
-          exv);  // cs 사이즈 말고 cs_modified의 사이즈 구하기.
-      if (exv_candidate_modified_size <= min_candidate_modified_size) {
-        min_candidate_modified_size = exv_candidate_modified_size;
-        current_vertex_ = exv;
-      }  // cs_modified 의 size가 최소인 vertex를 current_vertex로 임명.
-    }
-
-    // 4. 수도 코드 내용.
-    // 밑에서 cs 이용한 것도 다 cs_modified 버전으로 바꿔야 함.
-    // 아예 cs 클래스를 수정하는게 나은가?
-    for (size_t v = 0; v < cs.GetCandidateSize(current_vertex_); v++) {
-      if (data_visited[v] == 0) {
-        mapping_[current_vertex_] = cs.GetCandidate(current_vertex_, v);
-        num_mapping_pairs_ += 1;
-        data_visited[v] = 1;
-        query_matched[current_vertex_] = 1;
-        RecursiveBacktrack(data, query, cs, mapping_);
-        num_mapping_pairs_ -= 1;
-        mapping_[current_vertex_] = 0;
-        data_visited[v] = 0;
-        query_matched[current_vertex_] = 0;
-      }
+  // 2. 수도 코드 내용.
+  GRAPH_PATTERN_MATCHING_CHALLENGE_LOG(
+      "mapping extended to %d (candidates: %s)", current_vertex_,
+      vector_to_string(extendable_cs[current_vertex_]).c_str());
+  for (const Vertex v : extendable_cs[current_vertex_]) {
+    if (!data_visited[v]) {
+      GRAPH_PATTERN_MATCHING_CHALLENGE_LOG("map %d -> %d", current_vertex_, v);
+      AddMapping(current_vertex_, v, data, dag, cs, mapping, data_visited,
+                 extendable_cs, queue);
+      RecursiveBacktrack(num_mapping_pairs + 1, data, query, dag, cs, mapping,
+                         data_visited, extendable_cs, queue);
+      RemoveMapping(current_vertex_, v, dag, mapping, data_visited,
+                    extendable_cs, queue);
     }
   }
+  GRAPH_PATTERN_MATCHING_CHALLENGE_LOG("backtrack from query vertex u = %d",
+                                       current_vertex_);
+
+  queue.push(current_vertex_);
+  current_vertex_ = prev_vertex;
+}

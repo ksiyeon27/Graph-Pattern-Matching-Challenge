@@ -26,8 +26,7 @@ int main(int argc, char* argv[]) {
 
   Backtrack backtrack;
 
-  // backtrack.PrintAllMatches(data, query, candidate_set);
-  backtrack.RecursiveBacktrack(data, query, candidate_set, mapping_output);
+  backtrack.PrintAllMatches(data, query, candidate_set);
 
   return EXIT_SUCCESS;
 }
