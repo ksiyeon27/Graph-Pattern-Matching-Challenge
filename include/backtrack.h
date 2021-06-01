@@ -16,7 +16,7 @@
 
 class Backtrack {
  public:
-  Backtrack();
+  Backtrack(size_t max_matches);
   ~Backtrack();
 
   void PrintAllMatches(const Graph &data, const Graph &query,
@@ -53,6 +53,8 @@ class Backtrack {
                           std::function<bool(Vertex, Vertex)>> &queue);
 
  private:
+  const size_t max_matches_;
+  size_t matches_;
   Vertex root_;
   Vertex current_vertex_;
 };

@@ -5,7 +5,10 @@
 
 #include "backtrack.h"
 
-Backtrack::Backtrack() {}
+#include <cstdlib>
+
+Backtrack::Backtrack(size_t max_matches)
+    : max_matches_(max_matches), matches_(0) {}
 Backtrack::~Backtrack() {}
 
 void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
@@ -99,6 +102,9 @@ void Backtrack::RecursiveBacktrack(
       std::cout << v << ' ';
     }
     std::cout << '\n';
+    if (++matches_ >= max_matches_) {
+      exit(EXIT_SUCCESS);
+    }
     return;
   }
 
