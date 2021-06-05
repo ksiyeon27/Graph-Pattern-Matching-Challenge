@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
   CandidateSet candidate_set(candidate_set_file_name);
   std::vector<Vertex> mapping_output;
 
-  Backtrack backtrack(100000);
+  Backtrack backtrack;
 
   backtrack.PrintAllMatches(data, query, candidate_set);
 
