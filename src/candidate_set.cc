@@ -38,7 +38,6 @@ CandidateSet::CandidateSet(const std::string& filename) {
   }
 
   fin.close();
-  std::cout << "cs";
 }
 
 CandidateSet::~CandidateSet() {}
