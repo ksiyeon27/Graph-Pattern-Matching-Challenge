@@ -9,6 +9,11 @@
 #include "graph.h"
 
 int main(int argc, char *argv[]) {
+  #ifdef NDEBUG
+  std::ios::sync_with_stdio(false);
+  std::cout.tie(nullptr);
+  #endif
+
   if (argc < 4) {
     std::cerr << "Usage: ./program <data graph file> <query graph file> "
                  "<candidate set file>\n";
