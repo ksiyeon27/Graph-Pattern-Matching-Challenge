@@ -45,4 +45,21 @@ std::string vector_to_string(const std::vector<T> &v) {
   }
 }
 
+template <typename T, typename U>
+std::string vector_to_string(const std::vector<std::pair<T, U>> &v) {
+  if (v.empty()) {
+    return "[]";
+  } else {
+    std::string ret = "[(";
+    ret += std::to_string(v.front().first) + ", " +
+           std::to_string(v.front().second);
+    for (size_t i = 1; i < v.size(); ++i) {
+      ret = ret + "), (" + std::to_string(v[i].first) + ", " +
+            std::to_string(v[i].second);
+    }
+    ret += ")]";
+    return ret;
+  }
+}
+
 #endif  // COMMON_H_
