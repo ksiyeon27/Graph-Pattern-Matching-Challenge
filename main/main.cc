@@ -9,6 +9,11 @@
 #include "graph.h"
 
 int main(int argc, char *argv[]) {
+#ifdef NDEBUG
+  std::ios::sync_with_stdio(false);
+  std::cout.tie(nullptr);
+#endif
+
   if (argc < 4) {
     std::cerr << "Usage: ./program <data graph file> <query graph file> "
                  "<candidate set file>\n";
@@ -24,7 +29,7 @@ int main(int argc, char *argv[]) {
   CandidateSet candidate_set(candidate_set_file_name);
   std::vector<Vertex> mapping_output;
 
-  Backtrack backtrack(100000);
+  Backtrack backtrack;
 
   backtrack.PrintAllMatches(data, query, candidate_set);
 
