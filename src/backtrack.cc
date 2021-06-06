@@ -57,8 +57,18 @@ void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
         vector_to_string(search_stack).c_str());
     GRAPH_PATTERN_MATCHING_CHALLENGE_LOG("current queue: %s",
                                          vector_to_string(queue).c_str());
-    GRAPH_PATTERN_MATCHING_CHALLENGE_LOG(
-        "current visit status: %s", vector_to_string(data_visited).c_str());
+#ifndef NDEBUG
+    // GRAPH_PATTERN_MATCHING_CHALLENGE_LOG(
+    //     "current visit status: %s", vector_to_string(data_visited).c_str());
+    std::vector<Vertex> temp;
+    for (size_t i = 0; i < data_visited.size(); ++i) {
+      if (data_visited[i]) {
+        temp.push_back(i);
+      }
+    }
+    GRAPH_PATTERN_MATCHING_CHALLENGE_LOG("current visit status: %s",
+                                         vector_to_string(temp).c_str());
+#endif
 
     if (search_stack.size() == query.GetNumVertices()) {
       // fast-forward to end of extendable candidates
@@ -70,6 +80,14 @@ void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
         mapping[u].second = extendable_cs[u][i];
         GRAPH_PATTERN_MATCHING_CHALLENGE_LOG("map %d -> %d", u,
                                              mapping[u].second);
+#ifndef NDEBUG
+        std::vector<Vertex> temp_mapping;
+        for (const auto &p : mapping) {
+          temp_mapping.push_back(p.second);
+        }
+        GRAPH_PATTERN_MATCHING_CHALLENGE_LOG(
+            "found embedding (%s)", vector_to_string(temp_mapping).c_str());
+#endif
         // # mapping 1개 완료 -> 출력
         std::cout << "a ";
         for (const auto &v : mapping) {
@@ -144,9 +162,8 @@ void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
       GRAPH_PATTERN_MATCHING_CHALLENGE_LOG(
           "mapping[u].first == %lu, extendable_cs[u].size() == %lu",
           mapping[u].first, extendable_cs[u].size());
-      // mapping[u].second = extendable_cs[u][mapping[u].first];
-      // Vertex v = mapping[u].second;  // mapping of current vertex
-      Vertex v = extendable_cs[u][mapping[u].first];  // mapping of current vertex
+      Vertex v =
+          extendable_cs[u][mapping[u].first];  // mapping of current vertex
       if (data_visited[v]) {
         // v is already visited; find next embedding
         can_branch = false;
