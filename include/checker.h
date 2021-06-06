@@ -17,15 +17,16 @@ class Output {
   inline size_t GetEmbeddingNum() const;
   inline Vertex GetEmbeddingVertex(size_t u, size_t i) const;
 
-  inline std::vector<std::vector<Vertex>> GetEmbeddings() const;
+  inline const std::vector<std::vector<Vertex>> &GetEmbeddings() const;
   void isValidate(const Graph &data, const Checkergraph &query);
 
  private:
   size_t embedding_id_;
   std::vector<std::vector<Vertex>> embeddings_;
+  std::vector<bool> visited_;
 };
 
-inline std::vector<std::vector<Vertex>> Output::GetEmbeddings() const {
+inline const std::vector<std::vector<Vertex>> &Output::GetEmbeddings() const {
   return embeddings_;
 }
 inline size_t Output::GetEmbeddingNum() const { return embedding_id_; };
