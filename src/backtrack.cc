@@ -199,7 +199,7 @@ void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
               break;
             }
           }
-          if (is_extendable_candidate) {
+          if (is_extendable_candidate && !data_visited[candidate]) {
             extendable_cs[child].push_back(candidate);
           }
         }
