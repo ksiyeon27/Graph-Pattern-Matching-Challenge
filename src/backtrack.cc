@@ -57,12 +57,17 @@ void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
         vector_to_string(search_stack).c_str());
     GRAPH_PATTERN_MATCHING_CHALLENGE_LOG("current queue: %s",
                                          vector_to_string(queue).c_str());
+    GRAPH_PATTERN_MATCHING_CHALLENGE_LOG(
+        "current visit status: %s", vector_to_string(data_visited).c_str());
 
     if (search_stack.size() == query.GetNumVertices()) {
       // fast-forward to end of extendable candidates
       size_t i;
       for (i = mapping[u].first; i < extendable_cs[u].size(); ++i) {
         mapping[u].second = extendable_cs[u][i];
+        if (data_visited[mapping[u].second]) {
+          continue;
+        }
         GRAPH_PATTERN_MATCHING_CHALLENGE_LOG("map %d -> %d", u,
                                              mapping[u].second);
         // # mapping 1개 완료 -> 출력
@@ -196,6 +201,7 @@ void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
         }
 
         if (extendable_cs[child].empty()) {
+          // fprintf(stderr, "%s\n", vector_to_string(mapping).c_str());
           GRAPH_PATTERN_MATCHING_CHALLENGE_LOG(
               "mapping %d -> %d is impossible because child node %d has no "
               "candidates",
