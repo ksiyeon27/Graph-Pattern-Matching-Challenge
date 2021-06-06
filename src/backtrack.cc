@@ -64,10 +64,10 @@ void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
       // fast-forward to end of extendable candidates
       size_t i;
       for (i = mapping[u].first; i < extendable_cs[u].size(); ++i) {
-        mapping[u].second = extendable_cs[u][i];
-        if (data_visited[mapping[u].second]) {
+        if (data_visited[extendable_cs[u][i]]) {
           continue;
         }
+        mapping[u].second = extendable_cs[u][i];
         GRAPH_PATTERN_MATCHING_CHALLENGE_LOG("map %d -> %d", u,
                                              mapping[u].second);
         // # mapping 1개 완료 -> 출력
@@ -112,7 +112,9 @@ void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
         }
 
         // un-visit u
-        data_visited[mapping[u].second] = false;
+        if (mapping[u].second >= 0) {
+          data_visited[mapping[u].second] = false;
+        }
         mapping[u].first = 0;
         mapping[u].second = -1;
         queue.push_back(u);
@@ -142,14 +144,16 @@ void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
       GRAPH_PATTERN_MATCHING_CHALLENGE_LOG(
           "mapping[u].first == %lu, extendable_cs[u].size() == %lu",
           mapping[u].first, extendable_cs[u].size());
-      mapping[u].second = extendable_cs[u][mapping[u].first];
-      Vertex v = mapping[u].second;  // mapping of current vertex
+      // mapping[u].second = extendable_cs[u][mapping[u].first];
+      // Vertex v = mapping[u].second;  // mapping of current vertex
+      Vertex v = extendable_cs[u][mapping[u].first];  // mapping of current vertex
       if (data_visited[v]) {
         // v is already visited; find next embedding
         can_branch = false;
         ++mapping[u].first;
         continue;
       }
+      mapping[u].second = v;
       GRAPH_PATTERN_MATCHING_CHALLENGE_LOG("map %d -> %d", u,
                                            mapping[u].second);
       data_visited[v] = true;
