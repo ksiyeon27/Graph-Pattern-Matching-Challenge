@@ -194,11 +194,6 @@ void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
             extendable_cs[child].push_back(candidate);
           }
         }
-        if (child == 46) {
-          GRAPH_PATTERN_MATCHING_CHALLENGE_LOG(
-              "extendable_cs[%d].size() == %lu", child,
-              extendable_cs[child].size());
-        }
 
         if (extendable_cs[child].empty()) {
           GRAPH_PATTERN_MATCHING_CHALLENGE_LOG(
