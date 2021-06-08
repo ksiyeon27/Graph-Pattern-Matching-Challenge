@@ -7,6 +7,41 @@
 
 #include <cstdlib>
 
+// namespace {
+// void RemoveFromQueue(size_t pos, std::function<bool(Vertex, Vertex)> comp,
+//                      std::vector<Vertex> &queue) {
+//   std::swap(queue[pos], queue.back());
+//   queue.pop_back();
+//   if (queue.empty() || queue.size() == pos) {
+//     return;
+//   }
+//   size_t parent_pos = (pos - 1) / 2;
+//   if (pos != 0 && comp(queue[parent_pos], queue[pos])) {
+//     // sift up
+//     do {
+//       std::swap(queue[parent_pos], queue[pos]);
+//       pos = parent_pos;
+//       parent_pos = (pos - 1) / 2;
+//     } while (pos != 0 && comp(queue[parent_pos], queue[pos]));
+//   } else {
+//     // sift down
+//     size_t size = queue.size();
+//     while (pos < size / 2) {
+//       size_t child_pos = 2 * pos + 1;
+//       if (child_pos < (size - 1) &&
+//           comp(queue[child_pos], queue[child_pos + 1])) {
+//         ++child_pos;
+//       }
+//       if (!comp(queue[pos], queue[child_pos])) {
+//         break;
+//       }
+//       std::swap(queue[pos], queue[child_pos]);
+//       pos = child_pos;
+//     }
+//   }
+// }
+// }  // namespace
+
 Backtrack::Backtrack() {}
 Backtrack::~Backtrack() {}
 
@@ -116,12 +151,13 @@ void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
         for (auto it = queue.rbegin(); it != queue.rend(); ++it) {
           if (extendable_cs[*it].empty()) {
             std::swap(queue[--back], *it);
+            // size_t pos = queue.size() - 1 - std::distance(queue.rbegin(), it);
+            // RemoveFromQueue(pos, candidate_size_order, queue);
           }
         }
         // finally, rebuild the queue
         if (back != queue.size()) {
           queue.resize(back);
-          std::make_heap(queue.begin(), queue.end(), candidate_size_order);
         }
 
         if (mapping[u].first != extendable_cs[u].size()) {
@@ -255,12 +291,16 @@ void Backtrack::PrintAllMatches(const Graph &data, const Graph &query,
     // push extendable children of u to queue
     for (Vertex child : extendable_children) {
       queue.push_back(child);
-      std::push_heap(queue.begin(), queue.end(), candidate_size_order);
+      // std::push_heap(queue.begin(), queue.end(), candidate_size_order);
     }
 
     // find next extendable vertex
-    u = queue.front();
-    std::pop_heap(queue.begin(), queue.end(), candidate_size_order);
+    auto argmax =
+        std::max_element(queue.begin(), queue.end(), candidate_size_order);
+    std::swap(*argmax, queue.back());
+    u = queue.back();
+    // u = queue.front();
+    // std::pop_heap(queue.begin(), queue.end(), candidate_size_order);
     queue.pop_back();
     GRAPH_PATTERN_MATCHING_CHALLENGE_LOG(
         "mapping extended to %d (candidates: %s)", u,
